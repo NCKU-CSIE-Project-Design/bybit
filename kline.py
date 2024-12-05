@@ -35,8 +35,8 @@ print(f'Your money: {get_balance()} USDT')
 
 
 def klines(symbol,yearbegin,monthbegin,daybegin,yearend,monthend,dayend,limit,timeframe):
-    start_time = int(datetime.datetime(yearbegin, monthbegin,daybegin).timestamp() * 1000)  # 轉換為毫秒
-    end_time = int(datetime.datetime(yearend,monthend,dayend).timestamp() * 1000)    # 轉換為毫秒
+    start_time = int(datetime.datetime(yearbegin, monthbegin,daybegin).timestamp() * 1000)  # change to ms
+    end_time = int(datetime.datetime(yearend,monthend,dayend).timestamp() * 1000)    
     try:
         resp = session.get_kline(
             category='linear',
@@ -54,9 +54,10 @@ def klines(symbol,yearbegin,monthbegin,daybegin,yearend,monthend,dayend,limit,ti
         resp = resp.set_index('Time')
         resp = resp.astype(float)
         resp = resp[::-1]
+        resp.to_csv("data/{}_{}.{}.{}to{}.{}.{}.csv".format(symbol,yearbegin,monthbegin,daybegin,yearend,monthend,dayend))
         return resp
     except Exception as err:
         print(err)
 
-data = klines('BTCUSDT',2024,7,18,2024,8,3,200,'D') #print plot
-mpf.plot(data, type='candle', style='charles', title='BTC/USDT 4 Hour Candle', ylabel='Price (USDT)', figsize=(8, 5))
+def showkline(data):
+    mpf.plot(data, type='candle', style='charles', title='BTC/USDT 4 Hour Candle', ylabel='Price (USDT)', figsize=(8, 5)) #print plot
