@@ -57,8 +57,6 @@ def klines(symbol,yearbegin,monthbegin,daybegin,yearend,monthend,dayend,limit,ti
         return resp
     except Exception as err:
         print(err)
-start_time = int(datetime.datetime(2024, 7, 18).timestamp() * 1000)  # 轉換為毫秒
-end_time = int(datetime.datetime(2024, 8, 3).timestamp() * 1000)    # 轉換為毫秒
 
 data = klines('BTCUSDT',2024,7,18,2024,8,3,200,'D') #print plot
 mpf.plot(data, type='candle', style='charles', title='BTC/USDT 4 Hour Candle', ylabel='Price (USDT)', figsize=(8, 5))
