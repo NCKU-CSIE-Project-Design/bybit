@@ -16,7 +16,6 @@ session = HTTP(
 # Config:
 tp = 0.012  # Take Profit +1.2%
 sl = 0.009  # Stop Loss -0.9%
-timeframe = 240  # 240 minutes
 mode = 1  # 1 - Isolated, 0 - Cross
 leverage = 10
 qty = 50    # Amount of USDT for one order
@@ -35,13 +34,17 @@ print(f'Your money: {get_balance()} USDT')
 
 
 
-def klines(symbol):
+def klines(symbol,yearbegin,monthbegin,daybegin,yearend,monthend,dayend,limit,timeframe):
+    start_time = int(datetime.datetime(yearbegin, monthbegin,daybegin).timestamp() * 1000)  # 轉換為毫秒
+    end_time = int(datetime.datetime(yearend,monthend,dayend).timestamp() * 1000)    # 轉換為毫秒
     try:
         resp = session.get_kline(
             category='linear',
             symbol=symbol,
             interval=timeframe,
-            limit=50
+            limit=limit,
+            start=start_time,
+            end=end_time
         )['result']['list']
         resp = pd.DataFrame(resp)
         resp.columns = ['Time', 'Open', 'High', 'Low', 'Close', 'Volume', 'Turnover']
@@ -54,6 +57,8 @@ def klines(symbol):
         return resp
     except Exception as err:
         print(err)
-#print(klines('BTCUSDT')) 
-data = klines('BTCUSDT') #print plot
-mpf.plot(data, type='candle', style='charles', title='BTC/USDT 4 Hour Candle', ylabel='Price (USDT)', figsize=(6, 6))
+start_time = int(datetime.datetime(2024, 7, 18).timestamp() * 1000)  # 轉換為毫秒
+end_time = int(datetime.datetime(2024, 8, 3).timestamp() * 1000)    # 轉換為毫秒
+
+data = klines('BTCUSDT',2024,7,18,2024,8,3,200,'D') #print plot
+mpf.plot(data, type='candle', style='charles', title='BTC/USDT 4 Hour Candle', ylabel='Price (USDT)', figsize=(8, 5))
